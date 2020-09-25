@@ -3,20 +3,38 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    /**
-     *      2x + 4y + 7z = 4
-     *      3x + 3y + 2z = 8
-     *      5x + 6y + 3z = 0
-     */
-
     private final Scanner scan = new Scanner(System.in);
+
     private final List<List<Double>> matrix = new ArrayList<List<Double>>();
 
     private void cls(){ for(int i = 0; i< 25; i++) System.out.println(); }
     
-    private void gaussJordanElimination(List<List<Double>> input){
-        List<Double> output = new ArrayList<Double>();
-        output.forEach(d -> System.out.println(d));
+    private void gaussJordanElimination(){
+        int counter = 0;
+
+        for(int i = 0; i< matrix.size(); i++){
+            Double pivot = matrix.get(i).get(counter);
+
+            if(pivot != 1){
+                for(int j = 0; j< matrix.get(i).size(); j++){
+                    matrix.get(i).set(j, matrix.get(i).get(j) / pivot);
+                }
+            }
+
+            for(int k = 0; k<matrix.size(); k++){
+                if(k == i) continue;
+
+                double konstanta = matrix.get(k).get(counter);
+                for(int j = 0; j< matrix.get(k).size(); j++){
+                    double yangDikurang = matrix.get(k).get(j);
+                    double patokanKurang = konstanta * matrix.get(i).get(j);
+                    matrix.get(k).set(j,  yangDikurang - patokanKurang);
+                }
+            }
+            counter++;
+        }
+
+        printList();
     }
 
     private void printList(){
@@ -29,8 +47,6 @@ public class App {
     }
 
     public App(){
-        String input = "";
-
         int n = 0;
 
         while(true){
@@ -75,15 +91,9 @@ public class App {
         
         printList();
 
-        while(true){
-            String x;
+        System.out.println("\nThis is the matrix. Proceed to the gauss elimination\n");
 
-            System.out.print("\nThis is the matrix. Proceed to the gauss elimination? [Y/N] ");
-            x = scan.nextLine();
-
-            if(x == "Y" && x == "N") break;
-                else System.out.println("Invalid input! Must Y or N \n\n");
-        }
+        gaussJordanElimination();
     }
 
     public static void main(String[] args) {
